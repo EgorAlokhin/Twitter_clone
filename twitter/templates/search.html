@@ -1,0 +1,53 @@
+{%extends 'base.html'%}
+{%load static%}
+{%block content%}
+
+<div class="container text-center">
+    <h1>Search</h1>
+    <br>
+      <form method="POST">
+        {%csrf_token%}
+        <input type="input" class="form-control" placeholder="Search for something" name="search">
+          <br>
+        <button type="submit" class="btn btn-secondary">Search</button>
+      </form>
+    <hr>
+    <br>
+    {%if searched%}
+    <h3>Here what we found:</h3>
+{%for i in searched%}
+<div class="alert alert-secondary" role="alert">
+    <div class="container">
+          <div class = "row">
+            <div class="col-1">
+              {%if i.author.profile.profile_img%}
+              <img src="{{i.author.profile.profile_img.url}}" class="img-fluid rounded-circle" alt="..." height="50" width="50">
+              {%else%}
+              <img src="{%static 'image/user_photo.jpg'%}" class="img-fluid rounded-start" alt="...">
+              {%endif%}
+            </div>
+            <div class="col-10">
+              {{i.body}}
+              <br>
+              <small class="text-muted">{{i.created}} by @{{i.author.username}} -{{i.number_of_likes}} like</small>
+                {%if user in i.likes.all%}
+                <a href="{%url 'like_tweet' i.id%}"><i class="bi bi-heart-fill"></i></a>
+                {%else%}
+                <a href="{%url 'like_tweet' i.id%}"><i class="bi bi-heart"></i></a>
+                {%endif%}
+              {%if request.user.username == i.author.username%}
+                <a href="{%url 'delete_tweet' i.id%}"><i class="bi bi-trash"></i></a>
+                <a href="{%url 'edit_tweet' i.id%}"><i class="bi bi-pencil"></i></a>
+              {%endif%}
+            </div>
+            <br>
+            <br>
+          </div>
+        </div>
+
+</div>{%endfor%}
+    {%endif%}
+
+</div>
+{%endblock%}
+

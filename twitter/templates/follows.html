@@ -1,0 +1,35 @@
+{%extends 'base.html'%}
+{%load static%}
+{%block content%}
+<h1>Followers list</h1>
+{%if profiles%}
+{%for i in profiles.followed_by.all%}
+<div class="card mb-3" style="max-width: 540px;">
+  <div class="row g-0">
+    <div class="col-md-4">
+      {%if i.profile_img%}
+      <img src="{{i.profile_img.url}}" class="img-fluid rounded-circle" alt="..." height="200" width="200">
+      {%else%}
+      <img src="{%static 'image/user_photo.jpg'%}" class="img-fluid rounded-start" alt="...">
+      {%endif%}
+    </div>
+    <div class="col-md-8">
+      <div class="card-body">
+        <h5 class="card-title">{{i.user.username}}</h5>
+        {%if i in profiles.follows.all%}
+            <p class="card-text"><a href="{%url 'profile' i.user.id%}">@{{i|lower}}</a><a href="{%url 'unfollow' i.user.id%}"><i class="bi bi-person-dash"></i></a></p>
+            {%else%}
+            <p class="card-text"><a href="{%url 'profile' i.user.id%}">@{{i|lower}}</a><a href="{%url 'follow' i.user.id%}"><i class="bi bi-person-plus"></i></a></p>
+            {%endif%}
+
+
+          <br>
+          <br>
+        <p class="card-text"><small class="text-body-secondary">Last updated -{{i.date_modified}}</small></p>
+      </div>
+    </div>
+  </div>
+</div>
+{%endfor%}
+{%endif%}
+{%endblock%}
